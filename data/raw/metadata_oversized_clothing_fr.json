@@ -1,0 +1,20 @@
+{
+  "collection_date": "2026-10-20 17:05:08",
+  "collection_method": "pytrends",
+  "country_code": "FR",
+  "country_name": "France",
+  "keyword": "oversized clothing",
+  "date_range_requested": "2016-01-01 2026-09-30",
+  "date_range_actual": "2016-01-01 to 2026-09-01",
+  "n_observations": 129,
+  "success": true,
+  "normalization_note": "Google Trends normalizes search interest to a 0-100 scale relative to the peak within the queried timeframe and geography. Values from different queries are independently normalized and not directly comparable in absolute terms.",
+  "limitations": [
+    "Values represent relative search interest, not absolute search volume.",
+    "Each query is independently normalized by Google.",
+    "Low-volume search terms may return zero or no data.",
+    "Google may sample data differently across requests.",
+    "Results may vary slightly between collection runs."
+  ],
+  "note": "Collected 129 monthly observations via pytrends."
+}

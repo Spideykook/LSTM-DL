@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated outputs (can be regenerated)
+results/figures/*.png
+results/figures/*.pdf
+results/tables/*.csv
+
+# Keep directory structure
+!results/figures/.gitkeep
+!results/tables/.gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Credentials
+*.key
+*.pem

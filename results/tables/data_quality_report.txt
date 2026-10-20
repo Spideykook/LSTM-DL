@@ -1,0 +1,58 @@
+======================================================================
+DATA QUALITY REPORT
+Generated: 2026-10-20 17:06:34
+======================================================================
+
+-- OVERVIEW --
+Total observations: 1032
+Columns: ['date', 'search_interest', 'keyword', 'country']
+Keywords: ['oversized clothing', 'streetwear', 'sustainable fashion', 'traditional clothing']
+Countries: ['France', 'India']
+Date range: 2016-01-01 to 2026-09-01
+
+-- COLUMN VALIDATION --
+  OK: All expected columns present.
+
+-- DATA TYPE VALIDATION --
+  OK: All data types valid.
+
+-- MISSING VALUES --
+  OK date: 0 missing (0.0%)
+  OK search_interest: 0 missing (0.0%)
+  OK keyword: 0 missing (0.0%)
+  OK country: 0 missing (0.0%)
+
+-- TIME SERIES GAPS --
+  OK: No gaps detected in monthly time series.
+
+-- OBSERVATIONS PER KEYWORD-COUNTRY --
+                              n_obs  n_missing  mean_interest  min_interest  max_interest
+keyword              country                                                             
+oversized clothing   France     129          0           1.15             0           100
+                     India      129          0          12.91             0           100
+streetwear           France     129          0          29.44            12           100
+                     India      129          0          10.51             3           100
+sustainable fashion  France     129          0           4.57             0           100
+                     India      129          0          11.57             0           100
+traditional clothing France     129          0          11.98             0           100
+                     India      129          0          37.43            16           100
+
+  Summary table saved to: C:\Users\KIIT0001\Desktop\Fashion Project\DL\results\tables\observation_summary.csv
+
+-- SEARCH INTEREST DISTRIBUTION --
+  Count (non-null): 1032
+  Mean: 14.95
+  Std:  16.39
+  Min:  0.00
+  25%:  2.00
+  50%:  10.00
+  75%:  26.00
+  Max:  100.00
+
+  NOTE: These are normalized Google Trends scores (0-100),
+  NOT absolute search volumes. Cross-query comparisons
+  of absolute magnitude are not methodologically valid.
+
+======================================================================
+END OF REPORT
+======================================================================
