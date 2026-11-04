@@ -6,9 +6,9 @@
 
 This project investigates fashion trend forecasting using historical Google Trends search-interest data. It compares forecasting performance between **India** and **France** using:
 
-1. A standard **LSTM** forecasting model
-2. A **seasonality-aware LSTM** with explicit seasonal features
-3. A **seasonal naive baseline** for benchmark comparison
+1. A **seasonal naive baseline** for benchmark comparison
+2. A standard **LSTM** forecasting model
+3. A **seasonality-aware LSTM** with explicit monthly sine/cosine features
 
 The study examines whether explicitly incorporating seasonal information improves forecasting accuracy, and whether results differ between Indian and French fashion markets.
 
@@ -21,12 +21,31 @@ The study examines whether explicitly incorporating seasonal information improve
 - [x] Data preprocessing and quality validation
 - [x] Exploratory visualization
 - [x] Documentation and research source registry
-- [ ] LSTM model implementation
-- [ ] Seasonality-aware LSTM model
-- [ ] Seasonal naive baseline
-- [ ] Model evaluation and comparison
-- [ ] Cross-country analysis
-- [ ] Final report
+- [x] Seasonal naive baseline
+- [x] Standard LSTM model
+- [x] Seasonality-aware LSTM model
+- [x] Model evaluation and comparison
+- [x] Cross-country analysis
+- [ ] Final research paper
+
+### Experimental Results Summary
+
+All three models were evaluated on 8 keyword-country series (4 keywords × 2 countries). Split: 70% train / 15% validation / 15% test (chronological). Scalers fit on training data only.
+
+| Keyword | Country | Best Model | MAE | RMSE |
+|---|---|---|---|---|
+| streetwear | India | Standard LSTM | 8.53 | 18.59 |
+| streetwear | France | Seasonality-Aware LSTM | 9.79 | 17.39 |
+| oversized clothing | India | Standard LSTM | 8.10 | 17.69 |
+| oversized clothing | France | Seasonal Naive | 7.40 | 23.67 |
+| sustainable fashion | India | Seasonality-Aware LSTM | 13.80 | 26.11 |
+| sustainable fashion | France | Seasonality-Aware LSTM | 10.35 | 22.34 |
+| traditional clothing | India | Seasonality-Aware LSTM | 12.26 | 17.74 |
+| traditional clothing | France | Standard LSTM | 13.16 | 22.55 |
+
+Full results: `results/tables/model_comparison.csv`
+
+> **Key finding:** No single model dominates. The Seasonality-Aware LSTM won 4/8 series, Standard LSTM won 3/8, and Seasonal Naive won 1/8. LSTM models do not uniformly outperform the baseline.
 
 ### Setup
 
@@ -38,8 +57,6 @@ The study examines whether explicitly incorporating seasonal information improve
 #### Installation
 
 ```bash
-# Navigate to the project directory
-# Install dependencies
 pip install -r requirements.txt
 ```
 
@@ -47,24 +64,11 @@ pip install -r requirements.txt
 
 #### 1. Data Collection
 
-**Automated (via pytrends):**
-
 ```bash
 python -m src.data_collection
 ```
 
-This will attempt to collect monthly Google Trends data for all configured keywords and countries. Rate limiting and retries are handled automatically.
-
-**Manual fallback:**
-
-If pytrends is blocked or rate-limited, you can export data manually from [Google Trends](https://trends.google.com/trends/explore):
-
-```bash
-# Print manual export instructions
-python -c "from src.data_collection import print_manual_export_instructions; print_manual_export_instructions()"
-```
-
-See [Manual Data Export](#manual-data-export) below for details.
+Or export manually from [Google Trends](https://trends.google.com/trends/explore) — run `python -c "from src.data_collection import print_manual_export_instructions; print_manual_export_instructions()"` for instructions.
 
 #### 2. Preprocessing
 
@@ -72,19 +76,23 @@ See [Manual Data Export](#manual-data-export) below for details.
 python -m src.preprocessing
 ```
 
-This loads raw CSV files, validates the data, removes duplicates, detects missing values, and produces:
-- A processed dataset at `data/processed/fashion_trends_processed.csv`
-- A data quality report at `results/tables/data_quality_report.txt`
+Outputs: `data/processed/fashion_trends_processed.csv`, `results/tables/data_quality_report.txt`
 
-#### 3. Visualization
+#### 3. Exploratory Visualization
 
 ```bash
 python -m src.visualization
 ```
 
-Generates exploratory plots saved to `results/figures/`.
+#### 4. Run Forecasting Experiments
 
-#### 4. Tests
+```bash
+python -m src.run_experiments
+```
+
+Trains all three models on each keyword-country series, generates forecast plots and comparison charts, and saves metrics to `results/tables/model_comparison.csv`.
+
+#### 5. Tests
 
 ```bash
 python -m pytest tests/ -v
@@ -110,83 +118,70 @@ python -m pytest tests/ -v
 
 #### Data Source
 
-Google Trends (https://trends.google.com). Monthly data, January 2016 – September 2026.
-
-See `docs/research_sources.md` for full source documentation and `docs/google_trends_limitations.md` for methodology notes.
-
-### Manual Data Export
-
-If automated collection is unavailable:
-
-1. Visit https://trends.google.com/trends/explore
-2. Set the search term to one keyword
-3. Set the time range to "2016-01-01 to 2026-09-30" (or closest available)
-4. Set the region to the target country (India or France)
-5. Download the CSV using the export button
-6. Rename the file following the convention: `gtrends_<keyword>_<country_code>.csv`
-7. Place files in `data/raw/`
-8. Run preprocessing: `python -m src.preprocessing`
-
-**Critical:** Export each keyword-country pair **separately** to maintain consistent normalization. Do not combine multiple keywords in a single Google Trends query, as Google normalizes them jointly. *[S1]*
+Google Trends (https://trends.google.com). Monthly data, January 2016 – September 2026. 129 observations per series, 1032 total.
 
 ### Project Structure
 
 ```
 DL/
 ├── data/
-│   ├── raw/              # Raw Google Trends CSV files
-│   └── processed/        # Cleaned, validated datasets
+│   ├── raw/                  # Raw Google Trends CSV files + metadata JSON
+│   └── processed/            # Cleaned, validated datasets
 ├── docs/
-│   ├── research_sources.md        # Bibliography and source registry
-│   ├── experiment_log.md          # Experiment tracking
-│   └── google_trends_limitations.md  # Data source methodology notes
+│   ├── research_sources.md   # Bibliography and source registry
+│   ├── experiment_log.md     # Experiment tracking
+│   └── google_trends_limitations.md
 ├── src/
 │   ├── __init__.py
-│   ├── config.py         # Central configuration
-│   ├── data_collection.py  # Google Trends data collection
-│   ├── preprocessing.py  # Data cleaning and validation
-│   └── visualization.py  # Exploratory plotting
+│   ├── config.py             # Central configuration
+│   ├── data_collection.py    # Google Trends data collection
+│   ├── preprocessing.py      # Data cleaning and validation
+│   ├── visualization.py      # Exploratory plotting
+│   ├── models.py             # Seasonal Naive, Standard LSTM, Seasonality-Aware LSTM
+│   ├── evaluation.py         # MAE, RMSE, comparison table
+│   ├── forecast_plots.py     # Forecast visualizations
+│   └── run_experiments.py    # Main experiment runner
 ├── tests/
 │   ├── __init__.py
-│   └── test_preprocessing.py
+│   ├── test_preprocessing.py
+│   └── test_forecasting.py
 ├── results/
-│   ├── figures/          # Generated charts
-│   └── tables/           # Data quality reports
+│   ├── figures/              # All generated charts
+│   └── tables/               # model_comparison.csv, data quality reports
 ├── requirements.txt
 ├── README.md
 └── .gitignore
 ```
 
+### Methodology
+
+- **Seasonal Naive Baseline:** Predicts using the value from the same month in the previous year. *[S5]*
+- **Standard LSTM:** Single-layer LSTM (50 units) with 12-month lookback, MinMaxScaler, early stopping. *[S4]*
+- **Seasonality-Aware LSTM:** Same LSTM architecture with additional sine/cosine month-of-year features (3 input features instead of 1).
+- **Evaluation:** Chronological 70/15/15 split. Walk-forward (rolling) test predictions. MAE and RMSE metrics.
+- **Data leakage prevention:** Scalers fit on training data only. No future information in sequences.
+
 ### Limitations
 
-1. **Google Trends normalization:** Search interest values are normalized 0–100 per query. Cross-query absolute comparisons are not valid. *[S1]*
-2. **Sampling variability:** Google Trends uses sampled data; results may vary between collection runs. *[S1]*
-3. **Cross-country magnitude:** A score of 80 in India and 80 in France does NOT indicate the same absolute search volume. Our analysis compares temporal patterns, not magnitudes.
-4. **pytrends reliability:** The pytrends library is unofficial and may be rate-limited or blocked. *[S3]*
-5. **Keyword coverage:** The selected keywords represent a subset of fashion trends. Findings may not generalize to all fashion categories.
+1. **Google Trends normalization:** Values are 0–100 per query; cross-query absolute comparisons are not valid. *[S1]*
+2. **Sampling variability:** Google Trends uses sampled data; results may vary between runs. *[S1]*
+3. **Cross-country magnitude:** Equal scores across countries do NOT indicate equal absolute search volume. Analysis compares temporal patterns only.
+4. **Small dataset:** 129 monthly observations per series limits deep learning effectiveness.
+5. **CPU training:** Models trained on CPU; no GPU acceleration used.
+6. **Keyword coverage:** Selected keywords represent a subset of fashion trends.
 
 ### Research Integrity
 
-- All external sources are documented in `docs/research_sources.md`.
-- No synthetic data is used in research experiments.
-- All experimental results are tracked in `docs/experiment_log.md`.
-- Claims are distinguished as: established facts (with citations), project design decisions, hypotheses (to be tested), or empirical findings (from our experiments).
-- Inline citations (e.g., *[S1]*) reference entries in `docs/research_sources.md`.
-
-### Citation Format
-
-References marked *[S1]*, *[S2]*, etc. correspond to entries in [`docs/research_sources.md`](docs/research_sources.md).
+- All sources documented in `docs/research_sources.md`.
+- No synthetic data in research experiments. Test files use clearly labelled synthetic fixtures.
+- All results in `docs/experiment_log.md` are from actual model runs.
+- No assumption that LSTM outperforms baselines — results reported as observed.
 
 ### Next Steps
 
-The next implementation phase will include:
-
-1. **Verify data collection** — confirm that Google Trends data has been successfully collected or manually imported.
-2. **Implement LSTM model** — standard LSTM for time-series forecasting of search interest.
-3. **Implement seasonality-aware LSTM** — add explicit seasonal features (month, quarter, year).
-4. **Implement seasonal naive baseline** — use same-month-last-year as the forecast.
-5. **Define evaluation framework** — chronological train/validation/test split with MAE, RMSE, and MAPE metrics.
-6. **Run comparative experiments** — evaluate all models across both countries and all keywords.
+1. Write the final research paper based on actual experimental results.
+2. Explore hyperparameter tuning and additional architectures.
+3. Add confidence intervals or multiple random seed runs.
 
 ### License
 

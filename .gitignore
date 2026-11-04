@@ -40,3 +40,4 @@ results/tables/*.csv
 # Credentials
 *.key
 *.pem
+LSTM-DL
