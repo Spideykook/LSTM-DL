@@ -1,0 +1,161 @@
+keyword,country,date,actual,seasonal_naive,standard_lstm,seasonal_lstm
+streetwear,India,2025-02-01,12.0,10.0,11.7143,10.982
+streetwear,India,2025-03-01,12.0,9.0,11.804,11.025
+streetwear,India,2025-04-01,12.0,10.0,11.8124,11.1
+streetwear,India,2025-05-01,12.0,9.0,11.8073,11.17
+streetwear,India,2025-06-01,14.0,10.0,11.7558,11.3061
+streetwear,India,2025-07-01,13.0,11.0,12.3407,11.5975
+streetwear,India,2025-08-01,14.0,11.0,12.4334,11.8711
+streetwear,India,2025-09-01,13.0,11.0,12.8045,12.2224
+streetwear,India,2025-10-01,14.0,10.0,12.7178,12.4872
+streetwear,India,2025-11-01,37.0,13.0,12.9318,12.7646
+streetwear,India,2025-12-01,40.0,12.0,19.9406,14.3644
+streetwear,India,2026-01-01,30.0,12.0,24.8668,16.2465
+streetwear,India,2026-02-01,100.0,12.0,24.8975,17.6438
+streetwear,India,2026-03-01,25.0,12.0,37.8206,19.7195
+streetwear,India,2026-04-01,24.0,12.0,29.1883,21.1418
+streetwear,India,2026-05-01,35.0,12.0,25.5764,21.7247
+streetwear,India,2026-06-01,25.0,14.0,26.6281,22.1793
+streetwear,India,2026-07-01,19.0,13.0,23.7652,22.381
+streetwear,India,2026-08-01,20.0,14.0,20.3976,22.2276
+streetwear,India,2026-09-01,24.0,13.0,18.8315,21.9458
+streetwear,France,2025-02-01,28.0,26.0,29.4878,29.7825
+streetwear,France,2025-03-01,30.0,24.0,29.7127,28.1394
+streetwear,France,2025-04-01,30.0,25.0,29.9276,26.8549
+streetwear,France,2025-05-01,25.0,22.0,30.0414,26.2527
+streetwear,France,2025-06-01,25.0,22.0,29.8119,26.3079
+streetwear,France,2025-07-01,27.0,24.0,29.4522,27.1029
+streetwear,France,2025-08-01,35.0,30.0,29.1412,28.4922
+streetwear,France,2025-09-01,34.0,34.0,29.2932,30.4266
+streetwear,France,2025-10-01,31.0,33.0,29.4807,32.0418
+streetwear,France,2025-11-01,56.0,33.0,29.5622,32.8129
+streetwear,France,2025-12-01,56.0,38.0,31.2889,34.276
+streetwear,France,2026-01-01,47.0,33.0,33.291,35.0612
+streetwear,France,2026-02-01,100.0,28.0,34.9006,34.8725
+streetwear,France,2026-03-01,48.0,30.0,39.2114,37.2631
+streetwear,France,2026-04-01,45.0,30.0,41.3123,37.7468
+streetwear,France,2026-05-01,43.0,25.0,42.3502,38.003
+streetwear,France,2026-06-01,28.0,25.0,42.8533,38.6704
+streetwear,France,2026-07-01,30.0,27.0,42.0938,39.0232
+streetwear,France,2026-08-01,35.0,35.0,40.9264,39.4959
+streetwear,France,2026-09-01,39.0,34.0,39.7976,40.1285
+oversized clothing,India,2025-02-01,23.0,23.0,23.1015,22.27
+oversized clothing,India,2025-03-01,28.0,24.0,23.089,22.5012
+oversized clothing,India,2025-04-01,27.0,28.0,23.3185,23.0863
+oversized clothing,India,2025-05-01,25.0,21.0,23.4443,23.5715
+oversized clothing,India,2025-06-01,22.0,26.0,23.7049,24.0444
+oversized clothing,India,2025-07-01,27.0,19.0,23.5727,23.9506
+oversized clothing,India,2025-08-01,22.0,27.0,23.8939,24.0907
+oversized clothing,India,2025-09-01,20.0,26.0,23.6899,23.6244
+oversized clothing,India,2025-10-01,23.0,23.0,23.337,22.9682
+oversized clothing,India,2025-11-01,30.0,18.0,23.2041,22.5583
+oversized clothing,India,2025-12-01,22.0,28.0,23.673,22.8088
+oversized clothing,India,2026-01-01,27.0,24.0,23.4591,22.4992
+oversized clothing,India,2026-02-01,100.0,23.0,23.608,22.7501
+oversized clothing,India,2026-03-01,29.0,28.0,27.6635,27.1674
+oversized clothing,India,2026-04-01,20.0,27.0,29.2331,28.8896
+oversized clothing,India,2026-05-01,38.0,25.0,29.4814,29.4301
+oversized clothing,India,2026-06-01,47.0,22.0,30.2504,30.318
+oversized clothing,India,2026-07-01,30.0,27.0,31.6138,31.5648
+oversized clothing,India,2026-08-01,40.0,22.0,32.0162,31.6824
+oversized clothing,India,2026-09-01,44.0,20.0,32.7682,32.0046
+oversized clothing,France,2025-02-01,0.0,0.0,0.0,-0.0
+oversized clothing,France,2025-03-01,0.0,0.0,0.0,0.0001
+oversized clothing,France,2025-04-01,0.0,0.0,0.0,-0.0
+oversized clothing,France,2025-05-01,0.0,0.0,0.0,-0.0001
+oversized clothing,France,2025-06-01,0.0,0.0,0.0,0.0
+oversized clothing,France,2025-07-01,0.0,0.0,0.0,0.0001
+oversized clothing,France,2025-08-01,0.0,0.0,0.0,0.0
+oversized clothing,France,2025-09-01,0.0,0.0,0.0,-0.0
+oversized clothing,France,2025-10-01,0.0,0.0,0.0,0.0
+oversized clothing,France,2025-11-01,19.0,0.0,0.0,0.0001
+oversized clothing,France,2025-12-01,0.0,0.0,0.1526,0.1651
+oversized clothing,France,2026-01-01,0.0,0.0,0.1482,0.1403
+oversized clothing,France,2026-02-01,100.0,0.0,0.1116,0.1097
+oversized clothing,France,2026-03-01,29.0,0.0,0.2049,0.1943
+oversized clothing,France,2026-04-01,0.0,0.0,0.2125,0.2035
+oversized clothing,France,2026-05-01,0.0,0.0,0.2536,0.2657
+oversized clothing,France,2026-06-01,0.0,0.0,0.1972,0.2172
+oversized clothing,France,2026-07-01,0.0,0.0,0.1588,0.1784
+oversized clothing,France,2026-08-01,0.0,0.0,0.1235,0.1396
+oversized clothing,France,2026-09-01,0.0,0.0,0.0929,0.1056
+sustainable fashion,India,2025-02-01,13.0,14.0,13.5498,14.2434
+sustainable fashion,India,2025-03-01,12.0,14.0,13.5531,14.2372
+sustainable fashion,India,2025-04-01,12.0,14.0,13.4505,13.9178
+sustainable fashion,India,2025-05-01,9.0,13.0,13.3115,13.4466
+sustainable fashion,India,2025-06-01,12.0,11.0,12.9735,12.7813
+sustainable fashion,India,2025-07-01,9.0,14.0,12.8304,12.3841
+sustainable fashion,India,2025-08-01,11.0,13.0,12.4341,11.8614
+sustainable fashion,India,2025-09-01,10.0,12.0,12.1798,11.6084
+sustainable fashion,India,2025-10-01,10.0,14.0,11.9268,11.4957
+sustainable fashion,India,2025-11-01,23.0,16.0,11.6312,11.4665
+sustainable fashion,India,2025-12-01,27.0,13.0,12.2169,12.4236
+sustainable fashion,India,2026-01-01,27.0,15.0,13.4309,13.9606
+sustainable fashion,India,2026-02-01,100.0,13.0,14.7515,15.4712
+sustainable fashion,India,2026-03-01,18.0,12.0,18.7752,19.6089
+sustainable fashion,India,2026-04-01,18.0,12.0,20.8562,21.4504
+sustainable fashion,India,2026-05-01,15.0,9.0,21.7282,21.991
+sustainable fashion,India,2026-06-01,13.0,12.0,21.9747,21.8693
+sustainable fashion,India,2026-07-01,30.0,9.0,21.6218,21.1852
+sustainable fashion,India,2026-08-01,76.0,11.0,21.9224,21.264
+sustainable fashion,India,2026-09-01,75.0,10.0,23.7649,23.134
+sustainable fashion,France,2025-02-01,5.0,3.0,3.2743,3.2829
+sustainable fashion,France,2025-03-01,5.0,4.0,3.3817,3.7104
+sustainable fashion,France,2025-04-01,3.0,5.0,3.4033,3.8164
+sustainable fashion,France,2025-05-01,4.0,4.0,3.2465,3.4255
+sustainable fashion,France,2025-06-01,5.0,0.0,3.2782,2.9946
+sustainable fashion,France,2025-07-01,2.0,3.0,3.5667,3.0436
+sustainable fashion,France,2025-08-01,4.0,2.0,3.4537,3.3548
+sustainable fashion,France,2025-09-01,4.0,4.0,3.622,4.0132
+sustainable fashion,France,2025-10-01,4.0,5.0,3.6191,4.3295
+sustainable fashion,France,2025-11-01,18.0,3.0,3.5622,4.0365
+sustainable fashion,France,2025-12-01,19.0,2.0,4.491,4.1023
+sustainable fashion,France,2026-01-01,25.0,4.0,5.0128,4.8021
+sustainable fashion,France,2026-02-01,100.0,5.0,5.6551,6.0091
+sustainable fashion,France,2026-03-01,22.0,5.0,7.1543,6.6593
+sustainable fashion,France,2026-04-01,14.0,3.0,6.3364,7.6659
+sustainable fashion,France,2026-05-01,8.0,4.0,6.3746,7.9972
+sustainable fashion,France,2026-06-01,10.0,5.0,6.445,8.0899
+sustainable fashion,France,2026-07-01,24.0,2.0,6.7138,8.0827
+sustainable fashion,France,2026-08-01,26.0,4.0,7.3958,8.2429
+sustainable fashion,France,2026-09-01,24.0,4.0,7.5849,8.5131
+traditional clothing,India,2025-02-01,38.0,32.0,36.6565,35.0765
+traditional clothing,India,2025-03-01,30.0,29.0,37.0386,32.2528
+traditional clothing,India,2025-04-01,29.0,27.0,36.8139,29.9284
+traditional clothing,India,2025-05-01,35.0,29.0,36.4015,29.1675
+traditional clothing,India,2025-06-01,59.0,40.0,36.292,30.5328
+traditional clothing,India,2025-07-01,47.0,36.0,37.6964,34.6785
+traditional clothing,India,2025-08-01,47.0,35.0,38.6505,38.9929
+traditional clothing,India,2025-09-01,50.0,38.0,39.5742,42.7919
+traditional clothing,India,2025-10-01,51.0,45.0,40.5726,45.4964
+traditional clothing,India,2025-11-01,66.0,37.0,41.445,46.5702
+traditional clothing,India,2025-12-01,78.0,34.0,43.4846,47.1754
+traditional clothing,India,2026-01-01,76.0,44.0,46.4104,47.4048
+traditional clothing,India,2026-02-01,100.0,38.0,48.9784,46.7136
+traditional clothing,India,2026-03-01,36.0,30.0,52.8742,47.6044
+traditional clothing,India,2026-04-01,37.0,29.0,53.0591,45.7284
+traditional clothing,India,2026-05-01,43.0,35.0,52.3661,44.5851
+traditional clothing,India,2026-06-01,40.0,59.0,51.5337,45.002
+traditional clothing,India,2026-07-01,36.0,47.0,49.8977,46.0508
+traditional clothing,India,2026-08-01,42.0,47.0,48.232,47.55
+traditional clothing,India,2026-09-01,50.0,50.0,46.9864,49.0679
+traditional clothing,France,2025-02-01,16.0,15.0,18.0696,16.2121
+traditional clothing,France,2025-03-01,19.0,17.0,18.0554,16.6978
+traditional clothing,France,2025-04-01,19.0,25.0,18.1182,17.3686
+traditional clothing,France,2025-05-01,26.0,19.0,17.9755,17.7932
+traditional clothing,France,2025-06-01,19.0,13.0,18.5357,18.6098
+traditional clothing,France,2025-07-01,18.0,24.0,19.0611,19.1138
+traditional clothing,France,2025-08-01,14.0,10.0,19.0149,18.809
+traditional clothing,France,2025-09-01,23.0,21.0,19.159,18.433
+traditional clothing,France,2025-10-01,20.0,17.0,19.2869,17.9798
+traditional clothing,France,2025-11-01,43.0,14.0,19.5381,17.642
+traditional clothing,France,2025-12-01,72.0,13.0,21.0886,18.7686
+traditional clothing,France,2026-01-01,57.0,20.0,24.0791,21.4672
+traditional clothing,France,2026-02-01,100.0,16.0,26.8228,24.0002
+traditional clothing,France,2026-03-01,44.0,19.0,29.8341,27.0259
+traditional clothing,France,2026-04-01,39.0,19.0,32.5297,29.7446
+traditional clothing,France,2026-05-01,34.0,26.0,34.0905,31.4779
+traditional clothing,France,2026-06-01,25.0,19.0,34.8715,32.3718
+traditional clothing,France,2026-07-01,30.0,18.0,35.1454,32.5817
+traditional clothing,France,2026-08-01,20.0,14.0,35.0454,32.2106
+traditional clothing,France,2026-09-01,22.0,23.0,34.5887,31.3505

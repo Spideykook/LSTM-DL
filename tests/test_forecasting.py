@@ -14,6 +14,7 @@ from src.models import (
     create_sequences,
     prepare_series,
     seasonal_naive_forecast,
+    seasonal_naive_walkforward,
 )
 
 
@@ -161,3 +162,12 @@ class TestPrepareSeries:
         result = prepare_series(shuffled, "test_keyword", "TestCountry")
         dates = result["date"].values
         assert all(dates[i] <= dates[i+1] for i in range(len(dates)-1))
+
+
+class TestWalkForwardNaive:
+    def test_uses_actual_lag12(self):
+        hist, test = np.arange(24, dtype=float), np.arange(100, 106, dtype=float)
+        p = seasonal_naive_walkforward(hist, test)
+        np.testing.assert_array_equal(p[:6], hist[12:18])
+        p2 = seasonal_naive_walkforward(hist[:12], np.arange(100, 124, dtype=float))
+        assert p2[12] == 100.0  # second cycle uses revealed test actuals

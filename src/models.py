@@ -257,6 +257,23 @@ def train_lstm(
     return model, history
 
 
+# ── Fair walk-forward baseline ───────────────────────────────────────
+
+def seasonal_naive_walkforward(
+    history: np.ndarray,
+    test: np.ndarray,
+    seasonal_period: int = SEASONAL_PERIOD,
+) -> np.ndarray:
+    """One-step-ahead seasonal naive: forecast for t is the actual value at t-12.
+
+    Matches the LSTM protocol (walk-forward, actuals revealed after each step),
+    so all three models face the same information set at every test month.
+    """
+    full = np.concatenate([history, test])
+    start = len(history)
+    return np.array([full[start + i - seasonal_period] for i in range(len(test))])
+
+
 # ── Full pipeline per series ─────────────────────────────────────────
 
 def run_single_series(
@@ -266,250 +283,83 @@ def run_single_series(
     lookback: int = LOOKBACK,
     epochs: int = 100,
     seed: int = 42,
+    n_seeds: int = 5,
 ) -> Optional[dict]:
-    """Run all three models on a single keyword-country series.
+    """Run all three models on one keyword-country series.
 
-    Parameters
-    ----------
-    df : pd.DataFrame
-        Full processed dataset.
-    keyword : str
-        Target keyword.
-    country : str
-        Target country.
-    lookback : int
-        LSTM lookback window.
-    epochs : int
-        Max training epochs.
-    seed : int
-        Random seed for reproducibility.
-
-    Returns
-    -------
-    dict or None
-        Results dictionary with predictions and metrics for all models.
+    Protocol: chronological 70/15/15 split; MinMax scaler fit on the training
+    segment only; windows look strictly backward; test predictions are
+    one-step-ahead walk-forward (actuals revealed after each step) for all
+    three models. LSTMs are trained with `n_seeds` seeds; the reported
+    prediction is the mean across seeds and per-seed MAE is also stored.
+    The seasonality-aware model receives sin/cos of the *target* month
+    (calendar is known in advance) in addition to the lagged series value.
     """
     import tensorflow as tf
-
-    # Set seeds for reproducibility
-    np.random.seed(seed)
-    tf.random.set_seed(seed)
+    from src.evaluation import calculate_mae, calculate_rmse
 
     series = prepare_series(df, keyword, country)
     if series is None or len(series) < lookback + 24:
-        logger.warning(
-            f"Insufficient data for '{keyword}' in {country} "
-            f"(need at least {lookback + 24} observations, have {len(series) if series is not None else 0})"
-        )
+        logger.warning(f"Insufficient data for '{keyword}' in {country}")
         return None
 
-    # Chronological split
     train_df, val_df, test_df = chronological_split(series)
-    logger.info(
-        f"[{keyword} / {country}] Split: train={len(train_df)}, "
-        f"val={len(val_df)}, test={len(test_df)}"
-    )
-
-    if len(test_df) < 2 or len(val_df) < 2:
-        logger.warning(f"Not enough data for validation/testing for '{keyword}' in {country}")
+    n_tr, n_va, n_te = len(train_df), len(val_df), len(test_df)
+    if n_te < 2 or n_va < 2:
         return None
+    y_all = series["search_interest"].values.astype(float)
 
-    # Store dates and actuals for test period
-    test_dates = test_df["date"].values
-    test_actual = test_df["search_interest"].values
+    # Scaler fit on TRAIN ONLY
+    scaler = MinMaxScaler().fit(y_all[:n_tr].reshape(-1, 1))
+    scaled = scaler.transform(y_all.reshape(-1, 1))
 
-    # ─── Model 1: Seasonal Naive ─────────────────────────────────
-    train_values = train_df["search_interest"].values
-    naive_preds = seasonal_naive_forecast(
-        np.concatenate([train_values, val_df["search_interest"].values]),
-        n_forecast=len(test_df),
-    )
+    # Seasonal features of the month being predicted at the next step
+    next_month = series["date"] + pd.offsets.MonthBegin(1)
+    cal = add_seasonal_features(next_month).values
+    feats = {"standard": scaled, "seasonal": np.hstack([scaled, cal])}
 
-    # ─── Model 2: Standard LSTM ──────────────────────────────────
-    # Fit scaler on training data only
-    scaler_std = MinMaxScaler(feature_range=(0, 1))
-    train_scaled = scaler_std.fit_transform(
-        train_df[["search_interest"]].values
-    )
-    val_scaled = scaler_std.transform(
-        val_df[["search_interest"]].values
-    )
-    # For test, we need the full history up to test start
-    full_before_test = pd.concat([train_df, val_df])
-    full_scaled = scaler_std.transform(
-        full_before_test[["search_interest"]].values
-    )
-    test_scaled = scaler_std.transform(
-        test_df[["search_interest"]].values
-    )
+    # Baseline (walk-forward, same protocol as LSTMs)
+    test_actual = y_all[n_tr + n_va:]
+    naive = seasonal_naive_walkforward(y_all[:n_tr + n_va], test_actual)
 
-    # Create sequences for standard LSTM (1 feature: search_interest)
-    all_train_val_scaled = np.vstack([train_scaled, val_scaled])
+    preds, seed_mae, seed_rmse = {}, {}, {}
+    for name, arr in feats.items():
+        X, y = create_sequences(arr, lookback)
+        tgt = np.arange(lookback, len(arr))  # target index of each window
+        m_tr, m_va, m_te = tgt < n_tr, (tgt >= n_tr) & (tgt < n_tr + n_va), tgt >= n_tr + n_va
+        per_seed = []
+        seed_mae[name], seed_rmse[name] = [], []
+        for k in range(n_seeds):
+            tf.keras.utils.set_random_seed(seed + k)
+            model, _ = train_lstm(
+                X[m_tr], y[m_tr], X[m_va], y[m_va],
+                input_shape=(lookback, arr.shape[1]), epochs=epochs, verbose=0,
+            )
+            p = scaler.inverse_transform(
+                model.predict(X[m_te], verbose=0).reshape(-1, 1)).flatten()
+            per_seed.append(p)
+            seed_mae[name].append(calculate_mae(test_actual, p))
+            seed_rmse[name].append(calculate_rmse(test_actual, p))
+            tf.keras.backend.clear_session()
+        preds[name] = np.mean(per_seed, axis=0)
 
-    trn_X, trn_y = create_sequences(train_scaled, lookback)
-    # For validation sequences, we need context from end of training
-    val_combined = np.vstack([train_scaled[-lookback:], val_scaled])
-    val_X, val_y = create_sequences(val_combined, lookback)
-
-    if len(trn_X) < 2 or len(val_X) < 1:
-        logger.warning(f"Not enough sequences for LSTM training: '{keyword}' in {country}")
-        return None
-
-    # Train standard LSTM
-    std_model, std_hist = train_lstm(
-        trn_X, trn_y, val_X, val_y,
-        input_shape=(lookback, 1),
-        epochs=epochs,
-        verbose=0,
-    )
-
-    # Generate test predictions using rolling forecast
-    std_preds_scaled = _rolling_forecast(
-        std_model, all_train_val_scaled, test_scaled, lookback, n_features=1
-    )
-    std_preds = scaler_std.inverse_transform(
-        std_preds_scaled.reshape(-1, 1)
-    ).flatten()
-
-    # ─── Model 3: Seasonality-Aware LSTM ─────────────────────────
-    # Add seasonal features
-    train_seasonal = add_seasonal_features(train_df["date"])
-    val_seasonal = add_seasonal_features(val_df["date"])
-    test_seasonal = add_seasonal_features(test_df["date"])
-    full_before_seasonal = add_seasonal_features(full_before_test["date"])
-
-    # Scale seasonal features using training data
-    scaler_sea = MinMaxScaler(feature_range=(0, 1))
-    train_si_scaled = scaler_sea.fit_transform(
-        train_df[["search_interest"]].values
-    )
-
-    # Build feature arrays: [search_interest_scaled, month_sin, month_cos]
-    train_feat = np.hstack([
-        train_si_scaled,
-        train_seasonal[["month_sin", "month_cos"]].values,
-    ])
-    val_si_scaled = scaler_sea.transform(val_df[["search_interest"]].values)
-    val_feat = np.hstack([
-        val_si_scaled,
-        val_seasonal[["month_sin", "month_cos"]].values,
-    ])
-    test_si_scaled_sea = scaler_sea.transform(test_df[["search_interest"]].values)
-    test_feat = np.hstack([
-        test_si_scaled_sea,
-        test_seasonal[["month_sin", "month_cos"]].values,
-    ])
-
-    all_train_val_feat = np.vstack([train_feat, val_feat])
-
-    sea_trn_X, sea_trn_y = create_sequences(train_feat, lookback)
-    val_feat_combined = np.vstack([train_feat[-lookback:], val_feat])
-    sea_val_X, sea_val_y = create_sequences(val_feat_combined, lookback)
-
-    if len(sea_trn_X) < 2 or len(sea_val_X) < 1:
-        logger.warning(f"Not enough seasonal sequences for '{keyword}' in {country}")
-        return None
-
-    # Train seasonality-aware LSTM (3 features)
-    sea_model, sea_hist = train_lstm(
-        sea_trn_X, sea_trn_y, sea_val_X, sea_val_y,
-        input_shape=(lookback, 3),
-        epochs=epochs,
-        verbose=0,
-    )
-
-    # Generate test predictions
-    sea_preds_scaled = _rolling_forecast(
-        sea_model, all_train_val_feat, test_feat, lookback, n_features=3
-    )
-    sea_preds = scaler_sea.inverse_transform(
-        sea_preds_scaled.reshape(-1, 1)
-    ).flatten()
-
-    # ─── Calculate metrics ───────────────────────────────────────
-    from src.evaluation import calculate_mae, calculate_rmse
+    def pack(p, key=None):
+        d = {"predictions": p, "mae": calculate_mae(test_actual, p),
+             "rmse": calculate_rmse(test_actual, p)}
+        if key:
+            d["seed_mae"], d["seed_rmse"] = seed_mae[key], seed_rmse[key]
+        return d
 
     results = {
-        "keyword": keyword,
-        "country": country,
-        "n_train": len(train_df),
-        "n_val": len(val_df),
-        "n_test": len(test_df),
-        "test_dates": test_dates,
-        "test_actual": test_actual,
-        "seasonal_naive": {
-            "predictions": naive_preds,
-            "mae": calculate_mae(test_actual, naive_preds),
-            "rmse": calculate_rmse(test_actual, naive_preds),
-        },
-        "standard_lstm": {
-            "predictions": std_preds,
-            "mae": calculate_mae(test_actual, std_preds),
-            "rmse": calculate_rmse(test_actual, std_preds),
-        },
-        "seasonal_lstm": {
-            "predictions": sea_preds,
-            "mae": calculate_mae(test_actual, sea_preds),
-            "rmse": calculate_rmse(test_actual, sea_preds),
-        },
-        "train_dates": train_df["date"].values,
-        "train_actual": train_df["search_interest"].values,
-        "val_dates": val_df["date"].values,
-        "val_actual": val_df["search_interest"].values,
+        "keyword": keyword, "country": country,
+        "n_train": n_tr, "n_val": n_va, "n_test": n_te, "n_seeds": n_seeds,
+        "test_dates": test_df["date"].values, "test_actual": test_actual,
+        "seasonal_naive": pack(naive),
+        "standard_lstm": pack(preds["standard"], "standard"),
+        "seasonal_lstm": pack(preds["seasonal"], "seasonal"),
+        "train_dates": train_df["date"].values, "train_actual": train_df["search_interest"].values,
+        "val_dates": val_df["date"].values, "val_actual": val_df["search_interest"].values,
     }
-
-    logger.info(
-        f"[{keyword} / {country}] Results - "
-        f"Naive MAE={results['seasonal_naive']['mae']:.2f}, "
-        f"Std LSTM MAE={results['standard_lstm']['mae']:.2f}, "
-        f"Sea LSTM MAE={results['seasonal_lstm']['mae']:.2f}"
-    )
-
+    logger.info(f"[{keyword}/{country}] MAE naive={results['seasonal_naive']['mae']:.2f} "
+                f"std={results['standard_lstm']['mae']:.2f} sea={results['seasonal_lstm']['mae']:.2f}")
     return results
-
-
-def _rolling_forecast(
-    model,
-    history: np.ndarray,
-    test_data: np.ndarray,
-    lookback: int,
-    n_features: int,
-) -> np.ndarray:
-    """Generate rolling one-step-ahead forecasts on the test set.
-
-    Uses actual values from test set to update the lookback window
-    after each prediction (walk-forward validation).
-
-    Parameters
-    ----------
-    model : tf.keras.Model
-        Trained LSTM model.
-    history : np.ndarray
-        All data before the test period (scaled).
-    test_data : np.ndarray
-        Test period data (scaled), used to update the window.
-    lookback : int
-        Number of lookback steps.
-    n_features : int
-        Number of features per time step.
-
-    Returns
-    -------
-    np.ndarray
-        Predicted values (scaled) for the test period.
-    """
-    predictions = []
-    # Start with the last lookback steps from history
-    window = history[-lookback:].copy()
-
-    for i in range(len(test_data)):
-        x_input = window.reshape(1, lookback, n_features)
-        pred = model.predict(x_input, verbose=0)[0, 0]
-        predictions.append(pred)
-
-        # Update window with actual test value (walk-forward)
-        if i < len(test_data):
-            new_row = test_data[i].copy()
-            window = np.vstack([window[1:], new_row.reshape(1, -1)])
-
-    return np.array(predictions)

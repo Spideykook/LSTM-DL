@@ -26,7 +26,8 @@ from src.config import (
     TABLES_DIR,
     ensure_directories,
 )
-from src.evaluation import build_comparison_table
+from src.evaluation import (build_comparison_table, build_predictions_table, build_seed_table,
+                            build_sensitivity_table, summarize_by_model)
 from src.models import run_single_series
 from src.forecast_plots import (
     plot_actual_vs_predicted,
@@ -88,6 +89,11 @@ def main():
 
     # ── Step 3: Build comparison table ───────────────────────────
     comparison_df = build_comparison_table(valid_results)
+    pred_df = build_predictions_table(valid_results)
+    build_seed_table(valid_results)
+    sens_df = build_sensitivity_table(pred_df)
+    summ = summarize_by_model(comparison_df)
+    print(summ.to_string()); print(summarize_by_model(sens_df.assign(n_train=0), TABLES_DIR / 'summary_by_model_excl_2026-02.csv').to_string())
     print("\n" + "=" * 70)
     print("MODEL COMPARISON RESULTS")
     print("=" * 70)

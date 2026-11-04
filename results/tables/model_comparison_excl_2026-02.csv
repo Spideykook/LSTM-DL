@@ -1,0 +1,25 @@
+keyword,country,model,n_test,MAE,RMSE
+oversized clothing,France,Seasonal Naive,19,2.5263,7.9538
+oversized clothing,France,Standard LSTM,19,2.586,7.9153
+oversized clothing,France,Seasonality-Aware LSTM,19,2.5906,7.9174
+oversized clothing,India,Seasonal Naive,19,7.5789,10.5531
+oversized clothing,India,Standard LSTM,19,4.7358,6.3505
+oversized clothing,India,Seasonality-Aware LSTM,19,4.8955,6.5093
+streetwear,France,Seasonal Naive,19,7.6842,10.478
+streetwear,France,Standard LSTM,19,7.2575,10.5309
+streetwear,France,Seasonality-Aware LSTM,19,6.6174,9.2843
+streetwear,India,Seasonal Naive,19,9.3158,12.3863
+streetwear,India,Standard LSTM,19,5.0243,8.4297
+streetwear,India,Seasonality-Aware LSTM,19,5.6716,9.4443
+sustainable fashion,France,Seasonal Naive,19,8.8421,12.1699
+sustainable fashion,France,Standard LSTM,19,7.2644,10.3608
+sustainable fashion,France,Seasonality-Aware LSTM,19,6.8549,10.0623
+sustainable fashion,India,Seasonal Naive,19,11.8947,22.3183
+sustainable fashion,India,Standard LSTM,19,10.0503,18.2608
+sustainable fashion,India,Seasonality-Aware LSTM,19,10.1822,18.4519
+traditional clothing,France,Seasonal Naive,19,12.6316,19.4503
+traditional clothing,France,Standard LSTM,19,10.194,16.3669
+traditional clothing,France,Seasonality-Aware LSTM,19,10.5074,17.0783
+traditional clothing,India,Seasonal Naive,19,12.4737,16.7882
+traditional clothing,India,Standard LSTM,19,12.8657,15.6911
+traditional clothing,India,Seasonality-Aware LSTM,19,10.3025,13.9047

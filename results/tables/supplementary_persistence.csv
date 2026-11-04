@@ -1,0 +1,17 @@
+keyword,country,test_scope,persistence_MAE,persistence_RMSE
+streetwear,India,full,11.0,23.9228
+streetwear,India,excl_2026-02,7.8947,18.5614
+streetwear,France,full,9.8,18.2126
+streetwear,France,excl_2026-02,7.5263,14.1886
+oversized clothing,India,full,12.9,23.9812
+oversized clothing,India,excl_2026-02,9.7368,18.0248
+oversized clothing,France,full,11.9,28.8132
+oversized clothing,France,excl_2026-02,7.2632,18.6435
+sustainable fashion,India,full,12.8,27.1054
+sustainable fashion,India,excl_2026-02,9.6316,22.2012
+sustainable fashion,France,full,10.9,24.7689
+sustainable fashion,France,excl_2026-02,7.5263,18.7013
+traditional clothing,India,full,10.3,17.427
+traditional clothing,India,excl_2026-02,9.5789,17.0108
+traditional clothing,France,full,12.0,18.8016
+traditional clothing,France,excl_2026-02,10.3684,16.5768

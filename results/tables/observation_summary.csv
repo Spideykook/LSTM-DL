@@ -1,0 +1,9 @@
+keyword,country,n_obs,n_missing,mean_interest,min_interest,max_interest
+oversized clothing,France,129,0,1.15,0,100
+oversized clothing,India,129,0,12.91,0,100
+streetwear,France,129,0,29.44,12,100
+streetwear,India,129,0,10.51,3,100
+sustainable fashion,France,129,0,4.57,0,100
+sustainable fashion,India,129,0,11.57,0,100
+traditional clothing,France,129,0,11.98,0,100
+traditional clothing,India,129,0,37.43,16,100

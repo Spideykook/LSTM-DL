@@ -23,7 +23,7 @@ This file serves as the central bibliography and evidence registry for the Fashi
 - **Source Type:** [OD] Official Documentation
 - **URL:** https://support.google.com/trends/answer/4365533
 - **Date Accessed:** 2026-10-20
-- **Verification Status:** UNVERIFIED — URL accessibility could not be confirmed at time of project setup due to environment constraints. The URL is the canonical help page referenced in Google Trends' own interface.
+- **Verification Status:** VERIFIED 2026-11-02 by web search — page exists, titled "FAQ about Google Trends data"; it states Trends data is a sample, low-volume terms appear as 0, and Trends is not a scientific poll.
 - **Claims Supported:**
   - Google Trends normalizes search data to a 0–100 scale relative to the peak within the selected timeframe and geography.
   - Each data point is divided by the total searches of the geography and time range to produce relative popularity.
@@ -111,3 +111,10 @@ The following claims used in the project documentation are based on widely accep
 - Sources should be re-verified when internet access is available.
 - No fabricated sources, authors, DOIs, or claims are included in this registry.
 - If a source is later found to be inaccurate or unavailable, it will be updated with a correction note.
+
+---
+## Additions (2026-11-02) — verification status
+- **S6** Choi, H. & Varian, H. (2012). Predicting the Present with Google Trends. *The Economic Record*, 88(s1), 2-9. DOI 10.1111/j.1475-4932.2012.00809.x. **VERIFIED by web search 2026-11-02** (publisher/index pages).
+- **S7** Hewamalage, H., Bergmeir, C. & Bandara, K. (2021). Recurrent neural networks for time series forecasting: Current status and future directions. *Int. J. Forecasting*, 37(1), 388-427. DOI 10.1016/j.ijforecast.2020.06.008. **VERIFIED by web search 2026-11-02.**
+- **S8-S11** VERIFIED by web search 2026-11-02 (publisher/index/DOI records): Ginsberg et al. (2009) *Nature* 457(7232), 1012-1014, doi 10.1038/nature07634; Zhang & Qi (2005) *EJOR* 160(2), 501-514, doi 10.1016/j.ejor.2003.08.037; Makridakis, Spiliotis & Assimakopoulos (2018) *PLoS ONE* 13(3), e0194889, doi 10.1371/journal.pone.0194889; Al-Halah, Stiefelhagen & Grauman (2017) *Fashion Forward*, ICCV, pp. 388-397, doi 10.1109/ICCV.2017.50. Also verified: Hochreiter & Schmidhuber (1997) DOI; Hyndman & Athanasopoulos (2021) FPP3 3rd ed. (OTexts); Google Trends FAQ page (S1).
+- S1-S5 remain as registered above (S1-S3 URLs still unverified from this environment).

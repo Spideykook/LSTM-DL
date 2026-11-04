@@ -26,18 +26,9 @@ env/
 .DS_Store
 Thumbs.db
 
-# Generated outputs (can be regenerated)
-results/figures/*.png
-results/figures/*.pdf
-results/tables/*.csv
-
-# Keep directory structure
-!results/figures/.gitkeep
-!results/tables/.gitkeep
-!data/raw/.gitkeep
-!data/processed/.gitkeep
+# pytest
+.pytest_cache/
 
 # Credentials
 *.key
 *.pem
-LSTM-DL

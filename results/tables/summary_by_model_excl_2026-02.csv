@@ -1,0 +1,10 @@
+,model,MAE,RMSE,MAE_wins
+All,Seasonal Naive,9.1184,14.0122,1.0
+All,Seasonality-Aware LSTM,7.2028,11.5816,3.0
+All,Standard LSTM,7.4972,11.7383,4.0
+France,Seasonal Naive,7.921,12.513,
+France,Seasonality-Aware LSTM,6.6426,11.0856,
+France,Standard LSTM,6.8255,11.2935,
+India,Seasonal Naive,10.3158,15.5115,
+India,Seasonality-Aware LSTM,7.763,12.0776,
+India,Standard LSTM,8.169,12.183,
